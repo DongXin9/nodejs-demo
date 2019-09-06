@@ -1,8 +1,13 @@
 #!/usr/bin/node
 
 const log = console.log;
-usr = process.argv[2];
-pwd = process.argv[3];
-log('usr: %s,pwd: %s',usr,pwd);
-var buf = new Buffer(usr + ':' + pwd);
-log('base64:%s',buf.toString('base64'));
+
+var data = process.argv[2];
+
+var buf = new Buffer(process.argv[2],'base64'),
+        info = buf.toString('utf8').split(':');
+
+log('usr: %s,pwd: %s',info[0],info[1]);
+
+
+
