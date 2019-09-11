@@ -1,11 +1,10 @@
 #!/usr/bin/node
 
 function Radio(station){
-  var _listeners = {
+  var _listeners = {};
     //'play':[fn1,fn2,fn3];
     //'stop':[]
     //键值对
-  };
    setTimeout(()=>{
     emit('play',station);
   },0);
