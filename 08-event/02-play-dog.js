@@ -13,5 +13,5 @@ var zangao = new Dog('zangao',9);
 taidi.on('bark',onBark);
 zangao.on('bark',onBark);
 function onBark(){
-  console.log('',this.getName(),this.getEnergy());
+  console.log('%s barked! enery: %s',this.getName(),this.getEnergy());
 }
