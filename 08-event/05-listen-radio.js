@@ -1,5 +1,5 @@
 #!/usr/bin/node
-const Radio = require('./03-radio.js');
+const Radio = require('./05-radio.js');
 const log = console.log;
 const station = {
   freq: '106.7',
@@ -12,4 +12,4 @@ radio.on('play',(station) => {
 });
 radio.on('stop',(station) => {
   log('"%s" FM %s closed!',station.name,station.freq);
-});
+})
