@@ -1,6 +1,6 @@
 #!/usr/bin/node
 const Read = require('stream').Readable;
-fuuction MyReadable(){
+function MyReadable(){
   Read.call(this);
 }
 var c = 'a'.charCodeAt(0);
