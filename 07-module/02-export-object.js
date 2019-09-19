@@ -8,13 +8,13 @@ var circle = {
    * @param radius半径
    * @returns {undefined}面积
    */
-  'area': function(radius){
+  area: (radius)=>{
     return Math.PI * radius * radius;
   },
-  'circumference':function(radius){
+  circumference:(radius)=>{
     return 2 * Math.PI * radius;
   },
-  'diameter':function(radius){
+  diameter:(radius)=>{
     return 2 * radius;
   }
 };

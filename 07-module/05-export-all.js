@@ -1,9 +1,9 @@
 #!/usr/bin/node
 
 module.exports = {
-    pi: require('./02-export-var'),
-      circle: require('./02-export-function'),
-        Circle: require('./02-export-object')
+    pi: require('./02-export-var.js'),
+    circle: require('./02-export-function.js'),
+    Circle: require('./02-export-object.js')
 
 };
 
