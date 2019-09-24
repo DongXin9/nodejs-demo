@@ -2,7 +2,7 @@
 const Write = require('stream').Writable;
 function GreenStream(){
   Write.call(this);
-};
+}
 GreenStream.prototype = Write.prototype;
 GreenStream.prototype._write = function(chunk,encoding,callback){
   process.stdout.write('\033[1;32m' + chunk + '\033[1;37m');

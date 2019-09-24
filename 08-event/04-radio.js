@@ -1,7 +1,7 @@
 #!/usr/bin/node
 
-const EventEmitter = require('events').EventEmitter,
-      util = require('util');
+const EventEmitter = require('events').EventEmitter;
+//util = require('util');
 function Radio(station){
   var self = this;
   for(var m in EventEmitter.prototype){

@@ -7,13 +7,13 @@ var sta,stm;
 //dst = fs.createWriteStream;
 if(fs.existsSync(src)){
   stm = fs.createReadStream(src).pipe(fs.createWriteStream(dst));
-    //复制x权限
-    //stm.on('close',()=>{
-    //  sta = fs.statSync(src);
-    //  fs.chmodSync(dst,sta.mode);
-    //});         
+  //复制x权限
+  stm.on('close',()=>{
+    sta = fs.statSync(src);
+    fs.chmodSync(dst,sta.mode);
+  });         
 }else{            
   console.error('%s not exist!',src);
               
   process.exit(1);              
-};
+}

@@ -1,6 +1,6 @@
 #!/usr/bin/node
 const Num = require('./04-share.js'),
-            log = console.log;
+      log = console.log;
 
 var n1 = new Num();
 var n2 = new Num();

@@ -18,7 +18,7 @@ function B(){
   this.b2 = 40;
   this.b3 = function(){
     console.log('b1 = %d,b2 = %d',this.b1,this.b2);
-  }
+  };
 }
 B.prototype.__proto__=A.prototype;
 var b = new B();

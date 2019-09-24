@@ -16,4 +16,4 @@ e.on('hello',function(){
 e.on('bye',function(){
   console.log('goodBye!');
   process.exit();
-})
+});

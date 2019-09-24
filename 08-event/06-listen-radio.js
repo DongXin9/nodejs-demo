@@ -12,4 +12,4 @@ radio.on('play',(station) => {
 });
 radio.on('stop',(station) => {
   log('"%s" FM %s closed!',station.name,station.freq);
-})
+});

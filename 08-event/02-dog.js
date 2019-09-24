@@ -11,7 +11,7 @@ function Dog(name, energy){
   _name = name;
   _energy = energy;
 
-  var timer = setInterval(()=>{
+  var timer = setInterval(function(){
     if(_energy>0){
       that.emit('bark');
       _energy--;
