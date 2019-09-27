@@ -1,5 +1,7 @@
 #!/usr/bin/node
 const http = require('http');
-http.createServer((rea, res) => {
-  res.end('hello world');
+
+http.createServer((req, res) => {
+    res.end('hello world');
+
 }).listen(8080);
