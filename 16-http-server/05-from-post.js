@@ -42,12 +42,12 @@ function getHTML(){
     +'</ul>'
     +'<form method="POST" action="/">'
     +'<input type="text" name="item">'
-    +'<input type="submit" value="提交">'
+    +'<input type="submit" value="add item">'
     +'</form>'
     +'</body>'
     +'</html>';
 
-  //return '<!DOCTYPE html><html><head><title>Hello</title><head><body><h1>TODO List</h1><ul>'+items.map(function(it) {return '<li>' + it + '</li>';}).join('\n')+'</ul><form method="POST" action="/"><input type="text" name="item"><input type="submit" value="提交"></form></body></html>';
+  //return '<!DOCTYPE html><html><head><title>Hello</title><head><body><h1>TODO List</h1><ul>'+items.map(function(it) {return '<li>' + it + '</li>';}).join('\n')+'</ul><form method="POST" action="/"><input type="text" name="item"><input type="submit" value="add item"></form></body></html>';
 
 }
              

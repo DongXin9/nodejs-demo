@@ -9,20 +9,14 @@ http.createServer((req, res) => {
   log(req.headers);
   log();
   if(req.url === '/'){
-    //200 ok
     res.writeHead(200, {'Content-Type': 'text/html'});
-    res.end(getHTML());    
-                      
+    res.end(getHTML());                  
   }else{
-    //404 not found
-    
-    var it = qs.parse(url.parse(req.url).query);
+    var it = qs.parse(url.parse(req.url).query).item;
     if(typeof it !== 'undefined'){
-      items.push(it.item);
+      items.push(it);
     }
-    
-    res.end(getHTML());
-                                  
+    res.end(getHTML());                              
   }
   res.end('OK!');
 }).listen(8080);
@@ -35,7 +29,7 @@ function getHTML(){
   +'<body>'
   +'<h1>TODO LIST</h1>'
   +'<ul>'
-  +items.map(function(it){return '<li>'+it+'</li>';}).join('\n')
+  +items.map(function(item){return '<li>'+item+'</li>';}).join('\n')
   +'</ul>'
   +'<form method="GET" action="/">'
   +'<input type="text" name="item">'
