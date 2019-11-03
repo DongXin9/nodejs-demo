@@ -123,9 +123,9 @@ function add(req, res) {
       chapterId: chapterList.length+1,
       chapterName: essay.title || '',
       imgPath: essay.imgPath || undefined,
-      chapterDes: essay.chapterDes || undefined,
+      chapterDes: essay.content || undefined,
       chapterContent: essay.content || '',
-      publishTimer: '2019/10/30',
+      publishTimer: '2019-10-30',
       author: 'admin',
       views: 1,
     }
