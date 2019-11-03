@@ -4,18 +4,13 @@ const http = require('http'),
       log  = console.log,
       qs   = require('querystring'),
       url = require('url'),
-      fs = require('fs');
-
+      fs = require('fs'),
+      path = require('path');
+const {chapterList, userList} = require('./data.js');
 var items = [];
-var isLogin;
+
 http.createServer((req, res) => {
-  
-  if(typeof req.headers['cookie'] === 'undefined') {
-    isLogin = false;
-  } else {
-    var pair = req.headers['cookie'].split('=');
-    isLogin = (pair[1] === 'true');
-  }
+  var data = '';
 
   var urls = url.parse(req.url,true);
   log(`${req.method} ${req.url} HTTP/${req.httpVersion}`);
@@ -23,18 +18,37 @@ http.createServer((req, res) => {
   log('');
 
   switch(req.method) {
-
     case 'GET':
+      //前台获取文章列表
       if(urls.pathname === '/list'){
         log(`${req.method} ${req.url} HTTP/${req.httpVersion}`);
         list(res);
         break;
+      }else if(req.url == '/list/'){
+        res.write(JSON.stringify(chapterList));
+        res.end();
       }
       else if(urls.pathname === '/listmanager'){
         listmanager(res);
         break;
-      }else if(urls.pathname === '/addChapter'){
+      }
+      else if(urls.pathname === '/addChapter'){
         addChapter(res);
+        break;
+      }else if(urls.pathname === '/login'){
+        getlogin(res);
+        break;
+      }else if(req.url == '/chaplist/'){
+        res.write(JSON.stringify(chapterList));
+        res.end();
+      }else if(urls.pathname === '/detail'){
+        let id = qs.parse(path.query).chapterId;
+        for(let i = 0; i < chapterList.length; i++){
+          if(chapterList[i].chapterId == id){
+            break;
+          }
+        }
+        detail(res);
         break;
       }
       else if(req.url != '/') {
@@ -49,79 +63,25 @@ http.createServer((req, res) => {
         });
         return;
       }
-      // else{
-        // log(`${req.method} ${req.url} HTTP/${req.httpVersion}`);
-        // var a = fs.readFileSync('.'+req.url).toString('utf8');
-        // var b = req.url.split('.');
-        // var c = b[1];
-        // if(c == 'css'){
-        //   res.writeHead(200,{
-        //     'Content-Type':'text/css',
-        //     'Content-Length': Buffer.byteLength(a),
-        //     'Access-Control-Allow-Origin': '*'
-        //   });
-        //   res.end(a);
-        //   break;
-        // }else if(c == 'jpg'){
-        //   res.writeHead(200,{
-        //     'Content-Type':'image/png',
-        //     'Content-Length': Buffer.byteLength(a),
-        //     'Access-Control-Allow-Origin': '*'
-        //   });
-        //   res.end(a);
-        //   break;
-        
-        // }else if(b[1] == 'jpeg'){
-        //   res.writeHead(200,{
-        //     'Content-Type':'image/jpeg',
-        //     'Content-Length': Buffer.byteLength(a),
-        //     'Access-Control-Allow-Origin': '*'
-        //   });
-        //   res.end(a);
-        //   break;
-        // }else{
-        //   res.writeHead(200,{
-        //     'Content-Type':'image/jpg',
-        //     'Content-Length': Buffer.byteLength(a),
-        //     'Access-Control-Allow-Origin': '*'
-        //   });
-        //   res.end(a);
-        //   break;
-        
-        // }
-        
-        
-      // }
-      
-
     case 'POST':
-      if(urls.pathname === '/addChapter'){
+      if(req.url === '/add'){
         add(req, res);
-      }else if(urls.pathname === '/login'){
-        req.on('data',(chunk)=>{data += chunk;});
-        req.on('end',()=>{
-          var account = qs.parse(data);
-          if(account.username === 'wangding' && account.pwd === '123') {
-            console.log('user: %s, password: %s', account.username, account.pwd);
-            isLogin = true;
-            addChapter(res);
-            
-          } else {
-            login(res);
-            
-          }
-        })
+        break;
+      }else if(req.url === '/login'){
+        login(req,res);
         break;
       }
-      
+      else{
+        console.log('ERROR');
+      }
       break;
 
     default:
       err(res);
       break;
   }
-}).listen(8080);
-
+}).listen(8083);
+//前台列表页面显示
 function list(res){
   var html = fs.readFileSync('./chapterList.html').toString('utf8');
   res.writeHead(200,{
@@ -131,6 +91,7 @@ function list(res){
   });
   res.end(html);
 }
+//后台文章列表页面显示
 function listmanager(res){
   var html = fs.readFileSync('./list.html').toString('utf8');
   res.writeHead(200,{
@@ -140,6 +101,7 @@ function listmanager(res){
   });
   res.end(html);
 }
+//后台添加文章页面显示
 function addChapter(res){
   var html = fs.readFileSync('./addChapter.html').toString('utf8');
   res.writeHead(200,{
@@ -149,21 +111,31 @@ function addChapter(res){
   });
   res.end(html);
 }
+//添加文章
 function add(req, res) {
-  var body = '';
-
-  req.on('data', function(chunk) { body += chunk; });
-  req.on('end', function() {
-    log(body);
-    
-    if(body != '') {
-      items.push(qs.parse(body).item);
-    }
-
-    listmanager(res);
+  let essay = '';
+  req.on('data',(data)=>{
+    essay += data;
   });
+  req.on('end',()=>{
+    essay = qs.parse(essay.toString('utf8'));
+    let item = {
+      chapterId: chapterList.length+1,
+      chapterName: essay.title || '',
+      imgPath: essay.imgPath || undefined,
+      chapterDes: essay.chapterDes || undefined,
+      chapterContent: essay.content || '',
+      publishTimer: '2019/10/30',
+      author: 'admin',
+      views: 1,
+    }
+    chapterList.push(item);
+  })
+  res.write(JSON.stringify(chapterList));
+  res.end('OK');
 }
-function login(res){
+//登录页面显示
+function getlogin(res){
   var html = fs.readFileSync('./login.html').toString('utf8');
   res.writeHead(200,{
     'Content-Type':'text/html',
@@ -172,42 +144,44 @@ function login(res){
   });
   res.end(html);
 }
-// function css(req,res){
-//   var a = fs.readFileSync('./css/'+req.url).toString('utf8');
-//   res.writeHead(200,{
-//     'Content-Type':'text/css'
-//   })
-//   res.end(a);
-// }
-// function show(res) {
+//登录验证
+function login(req,res){
+  let user = '';
+  let sign = 0;
 
-//   var html = '<!DOCTYPE html>\n'
-//             + '<html>\n'
-//             + '  <head>\n'
-//             + '    <meta charset="UTF-8">\n'
-//             + '    <title>Todo list</title>\n'
-//             + '  </head>\n'
-//             + '  <body>\n'
-//             + '    <h1>Todo List</h1>\n'
-//             + '    <form method="post" action="/">\n'
-//             + '       <p><input type="text" name="item" />'
-//             + '       <input type="submit" value="Add Item" /></p>\n'
-//             + '    </form>\n'
-//             + '    <ul>\n'
-//             + items.map(function(item) {return '      <li>' + item + '</li>';}).join('\n')
-//             + '    </ul>\n'
-//             + '  </body>\n'
-//             + '</html>';
+  req.on('data', (data)=>{
+      user += data;
+  });
 
-//   res.setHeader('Content-Type', 'text/html');
-//   res.setHeader('Content-Length', Buffer.byteLength(html));
+  req.on('end', ()=>{
+      user = JSON.parse(user);
+      userList.map((item)=>{
+          if(item.username == user.name && item.pwd == user.pswd){
+              sign = 1;
+              res.statusCode = 200;
+              res.end('OK');
+          }
+      });
+      if(sign == 0){
+      res.statusCode = 404;
+      res.end('error!')
+      }
+      
+  });
+}
+//文章详情页显示
+function detail(res){
+  var html = fs.readFileSync('./chapter.html').toString('utf8');
+  res.writeHead(200,{
+    'Content-Type':'text/html',
+    'Content-Length': Buffer.byteLength(html),
+    'Access-Control-Allow-Origin': '*'
+  });
+  res.end(html);
+        
+}
 
-//   res.statusCode = 200;
-//   res.end(html);
-// }
-
-
-
+//错误
 function err(res) {
   var msg = 'Not found!';
 

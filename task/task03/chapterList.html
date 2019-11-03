@@ -13,7 +13,7 @@
   </h2>
 	<div class="newblog left">
         <!--左left开始-->
-        <div class="oneblog">
+        <!-- <div class="oneblog">
             <h2><a title="路·过-喜欢在路上" href="/">路·过-喜欢在路上</a></h2>
             <figure><img src='images/1442201163344838-lp.jpg' border='0' width='120' height='120' alt='路·过-喜欢在路上'></figure>
             <ul class="nlist">
@@ -76,7 +76,7 @@
                 <span class="n2">评论（<a href="/">0</a>）</span>
                 <div class="line"></div>
             </p>
-        </div>
+        </div> -->
         
           <!--分页开始-->
         <div class="page">
@@ -93,6 +93,34 @@
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
 <script>
-    
+    var art = document.getElementsByClassName('newblog');
+        fetch('http://localhost:8083/chaplist/',{method:'GET'})
+            .then((res)=>{
+                return res.json();
+            })
+            .then(function (item) {
+                console.log(item);
+                var str = `<div class="oneblog">`;
+                for(let i=0;i<item.length;i++){
+                    str+=`<div class="oneblog">
+            <h2><a title="${item[i].chapterName}" href="http://localhost:8083/detail?chapterId=${item[i].chapterId}">${item[i].chapterName}</a></h2>
+            <figure><img src='${item[i].imgPath}' border='0' width='120' height='120' alt='${item[i].chapterName}'></figure>
+            <ul class="nlist">
+                <p>${item[i].chapterDes}</p>
+                <a title="${item[i].chapterName}" href="http://localhost:8083/detail?chapterId=${item[i].chapterId}" target="_blank" class="readmore">阅读全文>></a>
+            </ul>
+            <p class="dateview">
+                <span>${item[i].publishTimer}</span>
+                <span>作者：${item[i].author}</span>
+                <span>分类：[<a href="/">悠客</a>]</span>
+                <span class="nl">浏览（101)</span>
+                <span class="n2">评论（<a href="/">0</a>）</span>
+                <div class="line"></div>
+            </p>
+        </div>`
+                }
+                str+=`</div>`;
+                art[0].innerHTML+=str;
+            });
 </script>
 </html>

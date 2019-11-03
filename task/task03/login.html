@@ -98,7 +98,7 @@
     <div class="login">
         <div class="leftpart"></div>
         <div class="loginform">
-            <form class="myform">
+            <form method="GET" action="http://localhost:8083/listmanager"  class="myform">
                 <input type="text" autocomplete="off" placeholder="帐号" class="el-input__inner"  id="username" />
                 
                 <input type="password" autocomplete="off" placeholder="密码" class="el-input__inner"  id="pwd" />
@@ -110,7 +110,38 @@
 </body>
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <script>
+    window.onload=function(){
+        let name = document.getElementById('username');
+        let pswd = document.getElementById('pwd');
+        let login = document.getElementById('login');
 
+        console.log(name, pswd);
+
+        login.onclick=function(){
+            let msg = {
+                name: name.value,
+                pswd: pswd.value
+            }
+            msg = JSON.stringify(msg);
+
+            let reqmsg = {
+                    method: 'POST',
+                    body: msg,
+                    headers: {'Content-Type':'application/json'}
+                }
+                
+            // console.log(msg);
+            // console.log(reqmsg);
+
+            fetch('http://localhost:8083/login',reqmsg).then(res=>{
+                if(res.ok){
+                    window.location = 'http://localhost:8083/addChapter'
+                }else{
+                    console.log('ERROR LOGIN');
+                }
+            })
+        }
+    }
 
     
 </script>
