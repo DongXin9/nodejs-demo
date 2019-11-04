@@ -133,9 +133,9 @@
    }
    var result = document.getElementById('result');
    fetch('http://localhost:8083/chaplist/',{method:'GET'})
-   .then(function(response){
-       return response.json();
-   })
+   .then((res)=>{
+        return res.json();
+    })
    .then(function(item){
     for(var i=0;i<item.length;i++){
         var str=`<tr>

@@ -26,13 +26,16 @@ http.createServer((req, res) => {
         break;
       }
       else if(urls.pathname === '/listmanager'){
+        //后台文章列表页面显示
         listmanager(res);
         break;
       }
       else if(urls.pathname === '/addChapter'){
+        //后台添加文章页面显示
         addChapter(res);
         break;
       }else if(urls.pathname === '/login'){
+        //登录页面显示
         getlogin(res);
         break;
       }else if(req.url == '/chaplist/'){
@@ -41,37 +44,25 @@ http.createServer((req, res) => {
         res.end();
       }else if(urls.pathname === '/detail'){
         //阅读全文文章详情页页面显示
-
         detail(res);
         break;
       }else if(urls.pathname == '/getDetail'){
         //阅读全文文章详情页页面获取
-        let id=urls.query.chapterId-1;
-        console.log(urls.query);
-        console.log(id);
-        let ch = chapterList[id];
-        console.log(ch);
+        // let id=urls.query.chapterId-1;
+        // console.log(urls.query);
+        // console.log(id);
+        let ch = chapterList[urls.query.chapterId-1];
         res.writeHead(200,{'Content-Type':'text/json'});
-        // for(let i = 0; i < chapterList.length; i++){
-        //   if(chapterList[i].chapterId == id){
-
-        //     break;
-        //   }
-        // }
-        // res.write(JSON.stringify(chapterList[i]));
         res.end(JSON.stringify(ch));
       }
+      //js、css、images页面
       else if(req.url != '/') {
-        log(`${req.method} ${req.url} HTTP/${req.httpVersion}`);
-        res.writeHead(200,{'Content-type':"text/css"});
-        fs.readFile('.'+req.url, function(err, data) {
-            if (err) {
-                console.error(err);
-            }else{
-                res.end(data);
-            }
-        });
+        els(req,res);
         return;
+      }
+      else{
+        err(res);
+        break;
       }
     case 'POST':
       if(req.url === '/add'){
@@ -85,12 +76,21 @@ http.createServer((req, res) => {
         console.log('ERROR');
       }
       break;
-
     default:
       err(res);
       break;
   }
 }).listen(8083);
+//css、js、images
+function els(req,res){
+  fs.readFile('.'+req.url, function(err, data) {
+        if (err) {
+            console.error(err);
+        }else{
+            res.end(data);
+        }
+    });
+}
 //前台列表页面显示
 function list(res){
   var html = fs.readFileSync('./chapterList.html').toString('utf8');
@@ -135,7 +135,7 @@ function add(req, res) {
       imgPath: item.imgPath || undefined,
       chapterDes: item.content || '',
       chapterContent: item.content || '',
-      publishTimer: new Date().getTime(),
+      publishTimer: new Date(),
       author: 'admin',
       views: 1,
     }
