@@ -131,52 +131,29 @@
    function addChapter(){
         window.location = 'http://localhost:8083/addChapter'
    }
-//    var tbody = document.getElementById('result');
-//    fetch('http://localhost:8083/list/',{method:'GET'})
-//    .then(function(response){
-//        return response.json();
-//    })
-//    .then(function(myJson){
-//     for(var i=0;i<myJson.length;i++){
-//         var str=`<tr>
-//                             <td>
-//                                 ${myJson[i].chapterId}
-//                             </td>
-//                             <td>
-//                                 ${myJson[i].chapterName}
-//                             </td>
-//                             <td>
-//                                 ${myJson[i].views}
-//                             </td>
-//                             <td>
-//                                 213
-//                             </td>
-//                         </tr>`
-//         tbody.innerHTML += str;
-//     }
-    
-//    })
-$(document).ready(function(){
-        $.get("http://localhost:8083/list/",(data)=>{
-            var dataObj = JSON.parse(data);
-            for(var i=0;i<dataObj.length;i++){
-                var parenttr=$('<tr></tr>');
-                var td1=$('<td></td>');
-                var td2=$('<td></td>');
-                var td3=$('<td></td>');
-                var td4=$('<td></td>');
-                td1.append(dataObj[i].chapterId);
-                td2.append(dataObj[i].chapterName);
-                td3.append(dataObj[i].views);
-                td4.append('admin');
-                td1.appendTo(parenttr);
-                td2.appendTo(parenttr);
-                td3.appendTo(parenttr);
-                td4.appendTo(parenttr);
-                $('#result').append(parenttr);
-            
-            }
-        })
-    })
+   var result = document.getElementById('result');
+   fetch('http://localhost:8083/chaplist/',{method:'GET'})
+   .then(function(response){
+       return response.json();
+   })
+   .then(function(item){
+    for(var i=0;i<item.length;i++){
+        var str=`<tr>
+                    <td>
+                        ${item[i].chapterId}
+                    </td>
+                    <td>
+                        ${item[i].chapterName}
+                    </td>
+                    <td>
+                        ${item[i].views}
+                    </td>
+                    <td>
+                        ${item[i].author}
+                    </td>
+                </tr>`
+        result.innerHTML += str;
+    }
+   })
 </script>
 </html>

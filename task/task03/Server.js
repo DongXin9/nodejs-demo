@@ -7,10 +7,10 @@ const http = require('http'),
       fs = require('fs'),
       path = require('path');
 const {chapterList, userList} = require('./data.js');
-var items = [];
+
 
 http.createServer((req, res) => {
-  var data = '';
+  
 
   var urls = url.parse(req.url,true);
   log(`${req.method} ${req.url} HTTP/${req.httpVersion}`);
@@ -24,9 +24,6 @@ http.createServer((req, res) => {
         log(`${req.method} ${req.url} HTTP/${req.httpVersion}`);
         list(res);
         break;
-      }else if(req.url == '/list/'){
-        res.write(JSON.stringify(chapterList));
-        res.end();
       }
       else if(urls.pathname === '/listmanager'){
         listmanager(res);
@@ -39,17 +36,30 @@ http.createServer((req, res) => {
         getlogin(res);
         break;
       }else if(req.url == '/chaplist/'){
+        //获取data.js中chapterList的数据
         res.write(JSON.stringify(chapterList));
         res.end();
       }else if(urls.pathname === '/detail'){
-        let id = qs.parse(path.query).chapterId;
-        for(let i = 0; i < chapterList.length; i++){
-          if(chapterList[i].chapterId == id){
-            break;
-          }
-        }
+        //阅读全文文章详情页页面显示
+
         detail(res);
         break;
+      }else if(urls.pathname == '/getDetail'){
+        //阅读全文文章详情页页面获取
+        let id=urls.query.chapterId-1;
+        console.log(urls.query);
+        console.log(id);
+        let ch = chapterList[id];
+        console.log(ch);
+        res.writeHead(200,{'Content-Type':'text/json'});
+        // for(let i = 0; i < chapterList.length; i++){
+        //   if(chapterList[i].chapterId == id){
+
+        //     break;
+        //   }
+        // }
+        // res.write(JSON.stringify(chapterList[i]));
+        res.end(JSON.stringify(ch));
       }
       else if(req.url != '/') {
         log(`${req.method} ${req.url} HTTP/${req.httpVersion}`);
@@ -113,23 +123,23 @@ function addChapter(res){
 }
 //添加文章
 function add(req, res) {
-  let essay = '';
+  let item = '';
   req.on('data',(data)=>{
-    essay += data;
+    item += data;
   });
   req.on('end',()=>{
-    essay = qs.parse(essay.toString('utf8'));
-    let item = {
+    item = qs.parse(item.toString('utf8'));
+    let items = {
       chapterId: chapterList.length+1,
-      chapterName: essay.title || '',
-      imgPath: essay.imgPath || undefined,
-      chapterDes: essay.content || undefined,
-      chapterContent: essay.content || '',
-      publishTimer: '2019-10-30',
+      chapterName: item.title || '',
+      imgPath: item.imgPath || undefined,
+      chapterDes: item.content || '',
+      chapterContent: item.content || '',
+      publishTimer: new Date().getTime(),
       author: 'admin',
       views: 1,
     }
-    chapterList.push(item);
+    chapterList.push(items);
   })
   res.write(JSON.stringify(chapterList));
   res.end('OK');
@@ -154,9 +164,9 @@ function login(req,res){
   });
 
   req.on('end', ()=>{
-      user = JSON.parse(user);
+    user = qs.parse(user.toString('utf8'));
       userList.map((item)=>{
-          if(item.username == user.name && item.pwd == user.pswd){
+          if(item.username == user.username && item.pwd == user.pwd){
               sign = 1;
               res.statusCode = 200;
               res.end('OK');
@@ -177,8 +187,7 @@ function detail(res){
     'Content-Length': Buffer.byteLength(html),
     'Access-Control-Allow-Origin': '*'
   });
-  res.end(html);
-        
+  res.end(html);   
 }
 
 //错误

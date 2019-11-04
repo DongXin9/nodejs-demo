@@ -42,7 +42,8 @@ var chapterList = [
     }
 ];
 var userList = [
-    {username: "admin", pwd: "admin"}
+    {username: "admin", pwd: "admin"},
+    {username: "dx", pwd : 'dx'}
 ];
 
 module.exports = {chapterList,userList};
