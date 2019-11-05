@@ -116,7 +116,7 @@
                         </thead>
 
                         <tbody id="result"></tbody>
-
+                            
 
 
 
@@ -131,29 +131,60 @@
    function addChapter(){
         window.location = 'http://localhost:8083/addChapter'
    }
-   var result = document.getElementById('result');
-   fetch('http://localhost:8083/chaplist/',{method:'GET'})
-   .then((res)=>{
-        return res.json();
+   //fetch方法
+//    var result = document.getElementById('result');
+//    fetch('http://localhost:8083/chapterList',{method:'GET'})
+//    .then((res)=>{
+//         return res.json();
+//     })
+//    .then(function(item){
+//     for(var i=0;i<item.length;i++){
+//         var str=`<tr>
+//                     <td>
+//                         ${item[i].chapterId}
+//                     </td>
+//                     <td>
+//                         ${item[i].chapterName}
+//                     </td>
+//                     <td>
+//                         ${item[i].views}
+//                     </td>
+//                     <td>
+//                         ${item[i].author}
+//                     </td>
+//                 </tr>`
+//         result.innerHTML += str;
+//     }
+//     })
+    //jQuery实现
+    $(document).ready(function(){
+        var str = '';
+        $.get('http://localhost:8083/chapterList',function(data){
+            // console.log(data);
+            var data = JSON.parse(data);
+            // console.log(data);
+            // console.log(data.length);
+            for(var i=0;i<data.length;i++){
+                str+=`<tr>
+                    <td>
+                        ${data[i].chapterId}
+                    </td>
+                    <td>
+                        ${data[i].chapterName}
+                    </td>
+                    <td>
+                        ${data[i].views}
+                    </td>
+                    <td>
+                        ${data[i].author}
+                    </td>
+                 </tr>`
+            }
+            // console.log(str);
+            $('#result').append(str);
+        })
+        
+        
     })
-   .then(function(item){
-    for(var i=0;i<item.length;i++){
-        var str=`<tr>
-                    <td>
-                        ${item[i].chapterId}
-                    </td>
-                    <td>
-                        ${item[i].chapterName}
-                    </td>
-                    <td>
-                        ${item[i].views}
-                    </td>
-                    <td>
-                        ${item[i].author}
-                    </td>
-                </tr>`
-        result.innerHTML += str;
-    }
-   })
 </script>
 </html>

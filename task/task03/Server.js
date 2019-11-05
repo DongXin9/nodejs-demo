@@ -38,7 +38,7 @@ http.createServer((req, res) => {
         //登录页面显示
         getlogin(res);
         break;
-      }else if(req.url == '/chaplist/'){
+      }else if(req.url == '/chapterList'){
         //获取data.js中chapterList的数据
         res.write(JSON.stringify(chapterList));
         res.end();
@@ -55,7 +55,7 @@ http.createServer((req, res) => {
         res.writeHead(200,{'Content-Type':'text/json'});
         res.end(JSON.stringify(ch));
       }
-      //js、css、images页面
+      //js、css、images
       else if(req.url != '/') {
         els(req,res);
         return;
@@ -124,11 +124,10 @@ function addChapter(res){
 //添加文章
 function add(req, res) {
   let item = '';
-  req.on('data',(data)=>{
-    item += data;
-  });
+  var data = '';
+  req.on('data', (chunk) => { data += chunk; });
   req.on('end',()=>{
-    item = qs.parse(item.toString('utf8'));
+    item = qs.parse(data.toString('utf8'));
     let items = {
       chapterId: chapterList.length+1,
       chapterName: item.title || '',
@@ -142,6 +141,7 @@ function add(req, res) {
     chapterList.push(items);
   })
   res.write(JSON.stringify(chapterList));
+  res.statusCode = 200;
   res.end('OK');
 }
 //登录页面显示
@@ -156,26 +156,22 @@ function getlogin(res){
 }
 //登录验证
 function login(req,res){
-  let user = '';
-  let sign = 0;
-
-  req.on('data', (data)=>{
-      user += data;
-  });
-
+  var data = '';
+  var isLogin = false;
+  req.on('data', (chunk) => { data += chunk; });
   req.on('end', ()=>{
-    user = qs.parse(user.toString('utf8'));
-      userList.map((item)=>{
-          if(item.username == user.username && item.pwd == user.pwd){
-              sign = 1;
-              res.statusCode = 200;
-              res.end('OK');
-          }
-      });
-      if(sign == 0){
-      res.statusCode = 404;
-      res.end('error!')
+    var account = qs.parse(data.toString('utf8'));
+    userList.map((item)=>{
+      if(item.username == account.username && item.pwd == account.pwd){
+        isLogin = true;
+        res.statusCode = 200;
+        res.end('OK');
       }
+    });
+    if(isLogin === false){
+      res.statusCode = 404;
+      res.end('error!');
+    }
       
   });
 }

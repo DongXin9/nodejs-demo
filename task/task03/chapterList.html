@@ -22,31 +22,58 @@
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
 <script>
-    var newblog = document.getElementsByClassName('newblog');
-    fetch('http://localhost:8083/chaplist/',{method:'GET'})
-    .then((res)=>{
-        return res.json();
-    })
-    .then(function (item) {
-        for(var i=0;i<item.length;i++){
-            var str=`<div class="oneblog">
-                    <h2><a title="${item[i].chapterName}">${item[i].chapterName}</a></h2>
-                    <figure><img src='${item[i].imgPath}' border='0' width='120' height='120' alt='${item[i].chapterName}'></figure>
+    // var newblog = document.getElementsByClassName('newblog');
+    // fetch('http://localhost:8083/chapterList',{method:'GET'})
+    // .then((res)=>{
+    //     return res.json();
+    // })
+    // .then(function (item) {
+    //     for(var i=0;i<item.length;i++){
+    //         var str=`<div class="oneblog">
+    //                 <h2><a title="${item[i].chapterName}">${item[i].chapterName}</a></h2>
+    //                 <figure><img src='${item[i].imgPath}' border='0' width='120' height='120' alt='${item[i].chapterName}'></figure>
+    //                 <ul class="nlist">
+    //                     <p>${item[i].chapterDes}</p>
+    //                     <a title="${item[i].chapterName}" href="http://localhost:8083/detail?chapterId=${item[i].chapterId}" target="_blank" class="readmore">阅读全文>></a>
+    //                 </ul>
+    //                 <p class="dateview">
+    //                     <span>${item[i].publishTimer}</span>
+    //                     <span>作者：${item[i].author}</span>
+    //                     <span>分类：[<a href="/">悠客</a>]</span>
+    //                     <span class="nl">浏览（101)</span>
+    //                     <span class="n2">评论（<a href="/">0</a>）</span>
+    //                     <div class="line"></div>
+    //                 </p>
+    //             </div>`
+    //         newblog[0].innerHTML+=str;
+    //     }
+    // });
+    $(document).ready(function(){
+        var str = '';
+        $.get('http://localhost:8083/chapterList',function (data) {
+            var data = JSON.parse(data);
+            for(var i=0;i<data.length;i++){
+                str+=`<div class="oneblog">
+                    <h2><a title="${data[i].chapterName}">${data[i].chapterName}</a></h2>
+                    <figure><img src='${data[i].imgPath}' border='0' width='120' height='120' alt='${data[i].chapterName}'></figure>
                     <ul class="nlist">
-                        <p>${item[i].chapterDes}</p>
-                        <a title="${item[i].chapterName}" href="http://localhost:8083/detail?chapterId=${item[i].chapterId}" target="_blank" class="readmore">阅读全文>></a>
+                        <p>${data[i].chapterDes}</p>
+                        <a title="${data[i].chapterName}" href="http://localhost:8083/detail?chapterId=${data[i].chapterId}" target="_blank" class="readmore">阅读全文>></a>
                     </ul>
                     <p class="dateview">
-                        <span>${item[i].publishTimer}</span>
-                        <span>作者：${item[i].author}</span>
+                        <span>${data[i].publishTimer}</span>
+                        <span>作者：${data[i].author}</span>
                         <span>分类：[<a href="/">悠客</a>]</span>
                         <span class="nl">浏览（101)</span>
                         <span class="n2">评论（<a href="/">0</a>）</span>
                         <div class="line"></div>
                     </p>
                 </div>`
-            newblog[0].innerHTML+=str;
-        }
-    });
+            }
+            // console.log(str);
+            $('.newblog').append(str);
+           
+        })
+    })
 </script>
 </html>
