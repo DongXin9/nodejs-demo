@@ -9,7 +9,7 @@ router.post('/list',function(req,res,next){
   if(isLegal(req)) {
     res.render('list',{list:data.chapterList});
   } else {
-    res.send('用户名密码错误')
+    res.render('loginerror');
   }
 })
 function isLegal(req) {
